@@ -1,6 +1,11 @@
 FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04 
 
+
+RUN apt-key del 7fa2af80
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/3bf863cc.pub
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/7fa2af80.pub
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
+
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
          build-essential \
@@ -29,7 +34,7 @@ COPY p1.yml .
 
 RUN  /opt/conda/bin/conda env create -f p1.yml && \
      /opt/conda/bin/conda clean -ya 
-ENV PATH /opt/conda/envs/p1/bin:$PATH
+ENV PATH /opt/conda/envs/p1/bin:/opt/conda/bin:$PATH
 ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/workspace/extra/cudpp/build/lib:/workspace/extra/easy_profiler/build/bin
 
 COPY . .
